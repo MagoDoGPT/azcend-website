@@ -1,0 +1,7 @@
+/* ================================================================
+ * LAYOUT.CSS - Estilos de layout e tipografia responsiva
+ * Contem: tamanho base de fonte por breakpoint, cores de background
+ * Breakpoints: Desktop (>1200px), Tablet (810-1199px), Mobile (<810px)
+ * ================================================================ */
+:root body { background: rgb(255, 255, 255); } :root { font-size: 125%; } @media (min-width: 810px) and (max-width: 1199.98px) { :root { font-size: 112.5%; } } @media (max-width: 809.98px) { :root { font-size: 100%; } }
+html body { background: var(--token-e849235b-9447-4c69-9d54-f396730cc989, rgb(255, 255, 255)); }
