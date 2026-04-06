@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR" style="margin: 0; padding: 0; width: 100%; height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <!-- Viewport otimizada para iPhone/Safari e Android (Evita Zoom indesejado) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>Azcend - Site Protegido</title>
+    <link rel="icon" href="https://magodogpt.github.io/azcend-website/assets/images/8GI50WmomsRP96cEptfiIAF0GQ0_1d09167d423c.png" />
+    
+    <style>
+        /* RESET TOTAL PARA O PAI (CRM) */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            height: 100% !important;
+            overflow: hidden !important; /* Bloqueia scroll no pai, deixa o site (iframe) rolar */
+            background-color: #000; /* Fundo escuro premium durante o load */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* CONTAINER BLINDADO */
+        .site-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999999;
+        }
+
+        /* IFRAME FULL-RESPONSIVE */
+        iframe {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="site-wrapper">
+        <iframe 
+            src="https://magodogpt.github.io/azcend-website/" 
+            allow="autoplay; fullscreen; clipboard-write; encrypted-media; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- SCRIPT DE AJUSTE DINÂMICO PARA DISPOSITIVOS MÓVEIS -->
+    <script>
+        // Função para garantir que o iframe detecte o viewport correto no iOS/Android
+        function syncViewport() {
+            const h = window.innerHeight;
+            document.querySelector('.site-wrapper').style.height = h + 'px';
+        }
+
+        window.addEventListener('resize', syncViewport);
+        window.addEventListener('load', syncViewport);
+        syncViewport();
+
+        // Opcional: Caso seu CRM bloqueie frames (X-Frame-Options), 
+        // o redirecionamento abaixo limpa a tela e abre o site direto.
+        // Descomente se o iframe falhar totalmente:
+        // window.location.href = "https://magodogpt.github.io/azcend-website/";
+    </script>
+</body>
+</html>
