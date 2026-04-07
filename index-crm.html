@@ -1,202 +1,88 @@
 <!DOCTYPE html>
-<html lang="pt-BR" style="margin: 0; padding: 0; width: 100%; height: 100%;">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport responsivo para iPhone/Safari e Android -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>Azcend Pagamentos</title>
-    <link rel="icon" href="https://magodogpt.github.io/azcend-website/assets/images/8GI50WmomsRP96cEptfiIAF0GQ0_1d09167d423c.png" />
+
+    <!-- REDIRECIONAMENTO IMEDIATO (funciona mesmo que o CRM bloqueie scripts) -->
+    <meta http-equiv="refresh" content="0; url=https://magodogpt.github.io/azcend-website/">
 
     <style>
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* RESET TOTAL */
-        html {
-            margin: 0;
-            padding: 0;
+        html, body {
             width: 100%;
             height: 100%;
-            overflow: hidden;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #000;
-        }
-
-        /* CONTAINER PRINCIPAL */
-        .site-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* usa env(safe-area-inset-*) para suporte a notch do iPhone */
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
-            z-index: 999999;
-        }
-
-        /* IFRAME FULL RESPONSIVO */
-        iframe#site-frame {
-            display: block;
-            width: 100%;
-            height: 100%;
-            border: none;
-            margin: 0;
-            padding: 0;
-            /* Garante scroll suave dentro do iframe no iOS */
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* Loading screen enquanto o iframe carrega */
-        .loading-screen {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
             background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .splash {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 9999998;
-            transition: opacity 0.5s ease;
+            min-height: 100vh;
+            gap: 24px;
         }
 
-        .loading-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loading-logo {
+        .logo {
             width: 80px;
             height: 80px;
-            animation: pulse 1.5s ease-in-out infinite;
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+
+        .bar-track {
+            width: 160px;
+            height: 3px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00b7ff, #009ad6);
+            border-radius: 99px;
+            animation: load 1.2s ease-in-out forwards;
+        }
+
+        .label {
+            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+            letter-spacing: 0.04em;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.4; transform: scale(0.95); }
+            0%, 100% { opacity: 0.5; transform: scale(0.95); }
             50%       { opacity: 1;   transform: scale(1.05); }
         }
 
-        /* Fallback caso iframe não carregue */
-        .fallback-msg {
-            display: none;
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: #fff;
-            font-family: sans-serif;
-            z-index: 9999999;
-        }
-
-        .fallback-msg a {
-            color: #00b7ff;
-            text-decoration: none;
-            font-size: 1.1rem;
+        @keyframes load {
+            0%   { width: 0%; }
+            80%  { width: 90%; }
+            100% { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Loading screen -->
-    <div class="loading-screen" id="loading">
-        <img class="loading-logo"
+    <div class="splash">
+        <img class="logo"
              src="https://magodogpt.github.io/azcend-website/assets/images/8GI50WmomsRP96cEptfiIAF0GQ0_1d09167d423c.png"
              alt="Azcend" />
-    </div>
 
-    <!-- Fallback caso iframe seja bloqueado -->
-    <div class="fallback-msg" id="fallback">
-        <p>Redirecionando para o site...</p>
-        <a href="https://magodogpt.github.io/azcend-website/">Clique aqui se não for redirecionado</a>
-    </div>
+        <div class="bar-track">
+            <div class="bar-fill"></div>
+        </div>
 
-    <!-- Site principal em iframe -->
-    <div class="site-wrapper" id="wrapper">
-        <iframe
-            id="site-frame"
-            src="https://magodogpt.github.io/azcend-website/"
-            allow="autoplay; fullscreen; clipboard-write; encrypted-media; picture-in-picture; web-share"
-            allowfullscreen
-            scrolling="yes"
-            loading="eager"
-            title="Azcend Pagamentos">
-        </iframe>
+        <span class="label">Carregando...</span>
     </div>
 
     <script>
-        (function () {
-            var frame   = document.getElementById('site-frame');
-            var loading = document.getElementById('loading');
-            var fallback = document.getElementById('fallback');
-            var wrapper = document.getElementById('wrapper');
-
-            /* --------------------------------------------------
-             * 1. AJUSTE DINÂMICO DE ALTURA (resolve bug iOS Safari
-             *    onde 100vh != altura real da janela)
-             * -------------------------------------------------- */
-            function syncHeight() {
-                var h = window.innerHeight;
-                wrapper.style.height = h + 'px';
-                frame.style.height   = h + 'px';
-            }
-
-            syncHeight();
-            window.addEventListener('resize', syncHeight);
-            window.addEventListener('orientationchange', function () {
-                // Delay para o browser atualizar innerHeight após rotação
-                setTimeout(syncHeight, 150);
-                setTimeout(syncHeight, 400);
-            });
-
-            /* --------------------------------------------------
-             * 2. ESCONDE LOADING após o iframe carregar
-             * -------------------------------------------------- */
-            var loaded = false;
-
-            frame.addEventListener('load', function () {
-                loaded = true;
-                loading.classList.add('hidden');
-                setTimeout(function () { loading.style.display = 'none'; }, 600);
-            });
-
-            /* --------------------------------------------------
-             * 3. DETECÇÃO DE FALHA DO IFRAME
-             *    Se após 8s o iframe ainda não carregou, redireciona
-             * -------------------------------------------------- */
-            setTimeout(function () {
-                if (!loaded) {
-                    // Iframe pode estar bloqueado pelo CRM (X-Frame-Options/CSP)
-                    // Redireciona direto para o site
-                    try {
-                        window.top.location.replace('https://magodogpt.github.io/azcend-website/');
-                    } catch (e) {
-                        // Se window.top for bloqueado, mostra fallback
-                        loading.style.display = 'none';
-                        fallback.style.display = 'block';
-                    }
-                }
-            }, 8000);
-
-            /* --------------------------------------------------
-             * 4. SUPORTE A LINKS DENTRO DO IFRAME que abrem nova aba
-             *    Garante que mensagens postMessage do Framer sejam tratadas
-             * -------------------------------------------------- */
-            window.addEventListener('message', function (e) {
-                if (e.origin !== 'https://magodogpt.github.io') return;
-                // handler de mensagens do Framer (se necessário)
-            });
-
-        }());
+        window.location.replace('https://magodogpt.github.io/azcend-website/');
     </script>
+
 </body>
 </html>
